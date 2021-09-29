@@ -1,0 +1,47 @@
+/* Variables */
+:root {
+    --gradient-1: #000000;
+    --gradient-2: #092853;
+    --gradient-3: #1f607b;
+    --gradient-4: #4cb2b9;
+    --orange: #ff7d25;
+    --white: #ffffff;
+}
+
+/* Meta */
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background: rgb(0,0,0);
+    background: linear-gradient(167deg, var(--gradient-1) 0%, var(--gradient-2) 48%, var(--gradient-3) 77%, var(--gradient-4) 98%);
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 200;
+    font-size: 20px;
+    width: 100vw;
+    height: 100vh;
+}
+
+h1 {
+    font-size: 40px;
+    color: white;
+}
+
+/* Gameboard */
+#field {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-gap: 10px;
+    width: 400px;
+    height: 400px;
+}
+
+.square {
+    width: auto;
+    height: auto;
+    background: black;
+}
