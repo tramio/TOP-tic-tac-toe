@@ -23,10 +23,27 @@ const Gameboard = (() => {
     }
 })();
 
-(function playGame() {
-    Gameboard.create();
-    Gameboard.display();
+const Game = (() => {
+    const playerTurn = true;
+    const start = () => {
+        Gameboard.create();
+        Gameboard.display();
+    }
+    const changePlayerTurn = () => {
+        if (playerTurn) {
+            !playerTurn;
+        }
+        else if (!playerTurn) {
+            playerTurn;
+        }
+    }
+    return {
+        start,
+        changePlayerTurn,
+    };
 })();
+
+Game.start();
 
 const createPlayer = (name, marker) => {
     return { name, marker };
