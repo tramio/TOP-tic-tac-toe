@@ -1,28 +1,31 @@
-function setSquaresPerSide(size) {
-    return gameBoard = new Array(Math.pow(size, 2));
-}
-
-function createGameboard() {
-    setSquaresPerSide(3);
-}
-
-function populateGameboard() {
-    const square = document.createElement("div");
-    square.classList.add("square");
-    square.setAttribute("isClicked", false);
-    field.appendChild(square);
-}
-
-function displayGameboard() {
-    const field = document.getElementById("field");
-    for (let i = 0; i < gameBoard.length; i++) {
-        populateGameboard();
+const Gameboard = (() => {
+    const setSquaresPerSide = (size) => {
+        return board = new Array(Math.pow(size, 2));
     }
-}
+    const create = () => {
+        setSquaresPerSide(3);
+    }
+    const populate = () => {
+        const square = document.createElement("div");
+        square.classList.add("square");
+        square.setAttribute("isClicked", false);
+        field.appendChild(square);
+    }
+    const display = () => {
+        const field = document.getElementById("field");
+        for (let i = 0; i < board.length; i++) {
+            populate();
+        }
+    }
+    return {
+        create,
+        display,
+    }
+})();
 
 (function playGame() {
-    createGameboard();
-    displayGameboard();
+    Gameboard.create();
+    Gameboard.display();
 })();
 
 const createPlayer = (name, marker) => {
