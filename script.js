@@ -7,23 +7,27 @@ const Gameboard = (() => {
     const create = () => {
         return _setSize(3);
     }
-    const _populate = () => {
-        // create a square
+    const _addASquare = () => {
         const square = document.createElement("div");
         square.classList.add("square");
         field.appendChild(square);
-        // make it display the right mark on click
-        square.addEventListener("click", () => {
-            currentPlayer = Game.getCurrentTurn();
-            square.setAttribute("mark", currentPlayer.marker);
-            Game.setNewTurn();
-        }, { once: true });
+    }
+    const _makeSquaresDisplayCurrentPlayerMarkerOnClick = () => {
+        const squares = Array.from(document.querySelectorAll(".square"));
+        squares.forEach(square => {
+            square.addEventListener("click", () => {
+                currentPlayer = Game.getCurrentTurn();
+                square.setAttribute("mark", currentPlayer.marker);
+                Game.setNewTurn();
+            }, { once: true });
+        });
     }
     const display = () => {
         const field = document.getElementById("field");
         for (let i = 0; i < board.length; i++) {
-            _populate();
+            _addASquare();
         }
+        _makeSquaresDisplayCurrentPlayerMarkerOnClick();
     }
     return {
         create,
