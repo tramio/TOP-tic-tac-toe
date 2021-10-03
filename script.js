@@ -1,11 +1,11 @@
 const Gameboard = (() => {
-    const setSquaresPerSide = (size) => {
-        return board = new Array(Math.pow(size, 2));
+    const _setSize = (squaresPerSide) => {
+        return board = new Array(Math.pow(squaresPerSide, 2));
     }
     const create = () => {
-        setSquaresPerSide(3);
+        _setSize(3);
     }
-    const populate = () => {
+    const _populate = () => {
         const square = document.createElement("div");
         square.classList.add("square");
         square.setAttribute("isClicked", false);
@@ -14,7 +14,7 @@ const Gameboard = (() => {
     const display = () => {
         const field = document.getElementById("field");
         for (let i = 0; i < board.length; i++) {
-            populate();
+            _populate();
         }
     }
     return {
@@ -24,22 +24,21 @@ const Gameboard = (() => {
 })();
 
 const Game = (() => {
-    const playerTurn = true;
+    let _currentTurn = "player1";
     const start = () => {
-        Gameboard.create();
+        Gameboard.create(3);
         Gameboard.display();
     }
-    const changePlayerTurn = () => {
-        if (playerTurn) {
-            !playerTurn;
-        }
-        else if (!playerTurn) {
-            playerTurn;
-        }
+    const getCurrentTurn = () => {
+        _currentTurn;
+    }
+    const setNewTurn = () => {
+        _currentTurn === "player1" ? _currentTurn = "player2" : _currentTurn = "player1";
     }
     return {
         start,
-        changePlayerTurn,
+        getCurrentTurn,
+        setNewTurn,
     };
 })();
 
@@ -52,6 +51,7 @@ const createPlayer = (name, marker) => {
 const player1 = createPlayer("Earthian", "X");
 const player2 = createPlayer("Anglerfish", "O");
 
+// Loop à travers l'array: 
 // Les squares écoutent : lorsqu'ils sont cliqués, ils devront
     // révéler le signe du player dont le tour est en cours
     // arrêter d'écouter
