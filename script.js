@@ -17,7 +17,7 @@ const Gameboard = (() => {
         squares.forEach(square => {
             square.addEventListener("click", () => {
                 currentPlayer = Game.getCurrentTurn();
-                square.setAttribute("mark", currentPlayer.marker);
+                square.classList.add(currentPlayer.marker);
                 Game.setNewTurn();
             }, { once: true });
         });
@@ -38,7 +38,7 @@ const Gameboard = (() => {
 const createPlayer = (name, marker) => {
     return { name, marker };
 };
-const player1 = createPlayer("Earthian", "X");
+const player1 = createPlayer("Hearthian", "X");
 const player2 = createPlayer("Anglerfish", "O");
 
 const Game = (() => {

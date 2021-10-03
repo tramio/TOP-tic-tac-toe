@@ -45,3 +45,15 @@ h1 {
     height: auto;
     background: black;
 }
+
+.O,
+.X {
+    background-size: cover;
+}
+.O {
+    background-image: url("anglerfish.png");
+}
+
+.X {
+    background-image: url("hearthian.png");
+}
