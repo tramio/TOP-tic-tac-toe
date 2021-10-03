@@ -1,15 +1,23 @@
+let theArray;
+
 const Gameboard = (() => {
     const _setSize = (squaresPerSide) => {
         return board = new Array(Math.pow(squaresPerSide, 2));
     }
     const create = () => {
-        _setSize(3);
+        return _setSize(3);
     }
     const _populate = () => {
+        // create a square
         const square = document.createElement("div");
         square.classList.add("square");
-        square.setAttribute("isClicked", false);
         field.appendChild(square);
+        // make it display the right mark on click
+        square.addEventListener("click", () => {
+            currentPlayer = Game.getCurrentTurn();
+            square.setAttribute("mark", currentPlayer.marker);
+            Game.setNewTurn();
+        }, { once: true });
     }
     const display = () => {
         const field = document.getElementById("field");
@@ -23,17 +31,23 @@ const Gameboard = (() => {
     }
 })();
 
+const createPlayer = (name, marker) => {
+    return { name, marker };
+};
+const player1 = createPlayer("Earthian", "X");
+const player2 = createPlayer("Anglerfish", "O");
+
 const Game = (() => {
-    let _currentTurn = "player1";
+    let _currentPlayer = player1;
     const start = () => {
-        Gameboard.create(3);
+        theArray = Gameboard.create(3);
         Gameboard.display();
     }
     const getCurrentTurn = () => {
-        _currentTurn;
+        return _currentPlayer;
     }
     const setNewTurn = () => {
-        _currentTurn === "player1" ? _currentTurn = "player2" : _currentTurn = "player1";
+        _currentPlayer === player1 ? _currentPlayer = player2 : _currentPlayer = player1;
     }
     return {
         start,
@@ -41,22 +55,8 @@ const Game = (() => {
         setNewTurn,
     };
 })();
-
 Game.start();
 
-const createPlayer = (name, marker) => {
-    return { name, marker };
-};
-
-const player1 = createPlayer("Earthian", "X");
-const player2 = createPlayer("Anglerfish", "O");
-
-// Loop à travers l'array: 
-// Les squares écoutent : lorsqu'ils sont cliqués, ils devront
-    // révéler le signe du player dont le tour est en cours
-    // arrêter d'écouter
-    // puis déclencher le tour du player suivant
-    // (recursion)
 // Si les signes sont identiques pour :
     // winningCombinations
         // [1, 2, 3]
