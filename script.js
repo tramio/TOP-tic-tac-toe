@@ -7,27 +7,20 @@ const Gameboard = (() => {
     const create = () => {
         return _setSize(3);
     }
-    const _addASquare = () => {
-        const square = document.createElement("div");
-        square.classList.add("square");
-        field.appendChild(square);
-    }
-    const _makeSquaresDisplayCurrentPlayerMarkerOnClick = () => {
-        const squares = Array.from(document.querySelectorAll(".square"));
-        squares.forEach(square => {
-            square.addEventListener("click", () => {
-                currentPlayer = Game.getCurrentTurn();
-                square.classList.add(currentPlayer.marker);
-                Game.setNewTurn();
-            }, { once: true });
-        });
-    }
     const display = () => {
         const field = document.getElementById("field");
         for (let i = 0; i < board.length; i++) {
-            _addASquare();
+            const square = document.createElement("div");
+            square.classList.add("square");
+            square.setAttribute("data-value", i)
+            field.appendChild(square);
+            square.addEventListener("click", () => {
+                currentPlayer = Game.getCurrentTurn();
+                square.classList.add(currentPlayer.marker);
+                theArray[square.dataset.value] = currentPlayer.marker;
+                Game.setNewTurn();
+            }, { once: true });
         }
-        _makeSquaresDisplayCurrentPlayerMarkerOnClick();
     }
     return {
         create,
