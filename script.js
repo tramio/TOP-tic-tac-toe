@@ -22,7 +22,7 @@ const Gameboard = (() => {
         e.target.classList.add(currentPlayer.marker);
         theArray[e.target.dataset.value] = currentPlayer.marker;
         Game.checkWin();
-        Game.setNewTurn();
+        Game.setNewTurn(); // if noone won
     }
     return {
         create,
@@ -32,29 +32,58 @@ const Gameboard = (() => {
 })();
 
 const createPlayer = (name, marker) => {
-    return { name, marker };
+    let score = 0;
+    return { name, marker, score };
 };
 const player1 = createPlayer("Hearthian", "X");
 const player2 = createPlayer("Anglerfish", "O");
 
+const Page = (() => {
+    const updateScoreDisplay = () => {
+        document.getElementById("player1-score").textContent = `${player1.name}: ${player1.score}`;
+        document.getElementById("player2-score").textContent = `${player2.name}: ${player2.score}`;
+    }
+    const updateRoundDisplay = () => {
+        document.getElementById("round-counter").textContent = `Round ${Game.round}`;
+    }
+    return {
+        updateScoreDisplay,
+        updateRoundDisplay,
+    }
+})();
+
 const Game = (() => {
-    let _currentPlayer = player1;
+    const legend = document.getElementById("legend");
+    let _currentPlayer = "";
     const _winningCombinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+    let round = 1;
     const start = () => {
         theArray = Gameboard.create(3);
         Gameboard.display();
+        Page.updateScoreDisplay();
+        Page.updateRoundDisplay();
+        setNewTurn();
     }
     const getCurrentTurn = () => {
         return _currentPlayer;
     }
     const setNewTurn = () => {
-        _currentPlayer === player1 ? _currentPlayer = player2 : _currentPlayer = player1;
+        _currentPlayer == player1 ? _currentPlayer = player2 : _currentPlayer = player1;
+        legend.textContent = `It's ${_currentPlayer.name}'s turn!`;
     }
     const _isWin = ([a, b, c]) => {
         return (theArray[a] == player1.marker || theArray[a] == player2.marker) && theArray[a] == theArray[b] && theArray[a] == theArray[c];
     }
     const _getWinner = ([a, b, c]) => {
-        theArray[a] == player1.marker ? console.log("player1 won!") : console.log("player2 won!");
+        if (theArray[a] == player1.marker) {
+            legend.textContent = `${player1.name} won!`
+            player1.score++;
+        } else {
+            legend.textContent = `${player2.name} won!`
+            player2.score++;
+        }
+        Page.updateScoreDisplay();
+        round++;
     }
     const checkWin = () => {
         _winningCombinations.forEach(combination => {
@@ -75,6 +104,7 @@ const Game = (() => {
             square.addEventListener("click", Gameboard.displayCurrentMarker, { once: true });
         theArray = Gameboard.create(3);
         });
+        Page.updateRoundDisplay();
     }
     return {
         start,
@@ -82,6 +112,7 @@ const Game = (() => {
         setNewTurn,
         checkWin,
         reset,
+        round,
     };
 })();
 Game.start();

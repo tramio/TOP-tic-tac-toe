@@ -23,11 +23,15 @@ body {
     font-size: 20px;
     width: 100vw;
     height: 100vh;
+    color: white;
 }
 
 h1 {
     font-size: 40px;
-    color: white;
+}
+
+h2 {
+    font-size: 32px;
 }
 
 /* Gameboard */
@@ -50,6 +54,7 @@ h1 {
 .X {
     background-size: cover;
 }
+
 .O {
     background-image: url("anglerfish.png");
 }
