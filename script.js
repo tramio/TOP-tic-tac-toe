@@ -13,19 +13,21 @@ const Gameboard = (() => {
             const square = document.createElement("div");
             square.classList.add("square");
             square.setAttribute("data-value", i)
+            square.addEventListener("click", Gameboard.displayCurrentMarker, { once: true });
             field.appendChild(square);
-            square.addEventListener("click", () => {
-                currentPlayer = Game.getCurrentTurn();
-                square.classList.add(currentPlayer.marker);
-                theArray[square.dataset.value] = currentPlayer.marker;
-                assessAllPlayerOneWins();
-                Game.setNewTurn();
-            }, { once: true });
         }
+    }
+    const displayCurrentMarker = (e) => {
+        currentPlayer = Game.getCurrentTurn();
+        e.target.classList.add(currentPlayer.marker);
+        theArray[e.target.dataset.value] = currentPlayer.marker;
+        assessAllPlayerOneWins();
+        Game.setNewTurn();
     }
     return {
         create,
         display,
+        displayCurrentMarker,
     }
 })();
 
@@ -66,6 +68,10 @@ function assessAllPlayerOneWins() {
     winningCombinations.forEach(combination => {
         if (isPlayerOneWin(combination)) {
             console.log("Player 1 won!");
+            const remainingSquares = Array.from(document.querySelectorAll(".square"));
+            remainingSquares.forEach(square => {
+                square.removeEventListener("click", Gameboard.displayCurrentMarker, { once: true });
+            })
         };
     });
 }
