@@ -67,11 +67,21 @@ const Game = (() => {
             };
         });
     }
+    const reset = () => {
+        const squares = Array.from(document.querySelectorAll(".square"));
+        squares.forEach(square => {
+            square.classList.remove("O");
+            square.classList.remove("X");
+            square.addEventListener("click", Gameboard.displayCurrentMarker, { once: true });
+        theArray = Gameboard.create(3);
+        });
+    }
     return {
         start,
         getCurrentTurn,
         setNewTurn,
         checkWin,
+        reset,
     };
 })();
 Game.start();
