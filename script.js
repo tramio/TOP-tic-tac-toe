@@ -55,7 +55,7 @@ const Page = (() => {
 const Game = (() => {
     const legend = document.getElementById("legend");
     let _currentPlayer = "";
-    const _winningCombinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+    const winningCombinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
     let round = 1;
     const start = () => {
         theArray = Gameboard.create(3);
@@ -76,24 +76,35 @@ const Game = (() => {
     }
     const _getWinner = ([a, b, c]) => {
         if (theArray[a] == player1.marker) {
-            legend.textContent = `${player1.name} won!`
-            player1.score++;
+            return player1;
         } else {
-            legend.textContent = `${player2.name} won!`
-            player2.score++;
+            return player2;
         }
-        Page.updateScoreDisplay();
+    }
+    const _setNewRound = () => {
         round++;
     }
+    const _updateScore = () => {
+        winningPlayer.score++;
+        Page.updateScoreDisplay();
+    }
     const checkWin = () => {
-        _winningCombinations.forEach(combination => {
+        winningCombinations.forEach(combination => {
             if (_isWin(combination)) {
-                _getWinner(combination);
-                const remainingSquares = Array.from(document.querySelectorAll(".square"));
-                remainingSquares.forEach(square => {
-                    square.removeEventListener("click", Gameboard.displayCurrentMarker, { once: true });
-                })
-            };
+                (function displayWinner() {
+                    winningPlayer = _getWinner(combination);
+                    legend.textContent = `${winningPlayer.name} won!`;
+                })();
+                _updateScore();
+                _setNewRound();
+                makeSquaresStopListening();
+            }
+        });
+    }
+    const makeSquaresStopListening = () => {
+        const remainingSquares = Array.from(document.querySelectorAll(".square"));
+        remainingSquares.forEach(square => {
+            square.removeEventListener("click", Gameboard.displayCurrentMarker, { once: true });
         });
     }
     const reset = () => {
@@ -113,6 +124,7 @@ const Game = (() => {
         checkWin,
         reset,
         round,
+        winningCombinations,
     };
 })();
 Game.start();
