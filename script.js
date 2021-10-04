@@ -22,7 +22,7 @@ const Gameboard = (() => {
         e.target.classList.add(currentPlayer.marker);
         theArray[e.target.dataset.value] = currentPlayer.marker;
         Game.checkWin();
-        Game.setNewTurn(); // if noone won
+        if (!Game.hasWinner) Game.setNewTurn(); // if noone won
     }
     return {
         create,
@@ -53,6 +53,7 @@ const Page = (() => {
 })();
 
 const Game = (() => {
+    const hasWinner = false;
     const legend = document.getElementById("legend");
     let _currentPlayer = "";
     const winningCombinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
@@ -91,6 +92,7 @@ const Game = (() => {
     const checkWin = () => {
         winningCombinations.forEach(combination => {
             if (_isWin(combination)) {
+                Game.hasWinner = true;
                 (function displayWinner() {
                     winningPlayer = _getWinner(combination);
                     legend.textContent = `${winningPlayer.name} won!`;
@@ -110,8 +112,7 @@ const Game = (() => {
     const reset = () => {
         const squares = Array.from(document.querySelectorAll(".square"));
         squares.forEach(square => {
-            square.classList.remove("O");
-            square.classList.remove("X");
+            square.classList.remove("O", "X");
             square.addEventListener("click", Gameboard.displayCurrentMarker, { once: true });
         theArray = Gameboard.create(3);
         });
@@ -125,6 +126,7 @@ const Game = (() => {
         reset,
         round,
         winningCombinations,
+        hasWinner,
     };
 })();
 Game.start();
