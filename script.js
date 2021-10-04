@@ -21,7 +21,7 @@ const Gameboard = (() => {
         currentPlayer = Game.getCurrentTurn();
         e.target.classList.add(currentPlayer.marker);
         theArray[e.target.dataset.value] = currentPlayer.marker;
-        assessAllPlayerOneWins();
+        checkWin();
         Game.setNewTurn();
     }
     return {
@@ -57,17 +57,20 @@ const Game = (() => {
 })();
 Game.start();
 
-function isPlayerOneWin([a, b, c]) {
-    if (theArray[a] === player1.marker && theArray[a] == theArray[b] && theArray[a] == theArray[c])
-    { return true } else { return false };
-}
-
 const winningCombinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
 
-function assessAllPlayerOneWins() {
+function isWin([a, b, c]) {
+    return (theArray[a] == player1.marker || theArray[a] == player2.marker) && theArray[a] == theArray[b] && theArray[a] == theArray[c];
+}
+
+function getWinner([a, b, c]) {
+    theArray[a] == player1.marker ? console.log("player1 won!") : console.log("player2 won!");
+}
+
+function checkWin() {
     winningCombinations.forEach(combination => {
-        if (isPlayerOneWin(combination)) {
-            console.log("Player 1 won!");
+        if (isWin(combination)) {
+            getWinner(combination);
             const remainingSquares = Array.from(document.querySelectorAll(".square"));
             remainingSquares.forEach(square => {
                 square.removeEventListener("click", Gameboard.displayCurrentMarker, { once: true });
