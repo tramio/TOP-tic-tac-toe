@@ -62,3 +62,7 @@ h2 {
 .X {
     background-image: url("hearthian.png");
 }
+
+#next-round-btn {
+    display: none;
+}

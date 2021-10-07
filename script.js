@@ -1,5 +1,27 @@
 let theArray;
 
+const NextRoundButton = (() => {
+    const button = document.getElementById("next-round-btn");
+    const display = () => {
+        button.style.display = "inline-block";
+    }
+    const hide = () => {
+        button.style.display = "none";
+    }
+    const enable = () => {
+        button.addEventListener("click", () => {
+            Game.startNewRound();
+            NextRoundButton.hide();
+        });
+    }
+    return {
+        display,
+        hide,
+        enable,
+    }
+})();
+NextRoundButton.enable();
+
 const Gameboard = (() => {
     const _setSize = (squaresPerSide) => {
         return board = new Array(Math.pow(squaresPerSide, 2));
@@ -13,7 +35,7 @@ const Gameboard = (() => {
             const square = document.createElement("div");
             square.classList.add("square");
             square.setAttribute("data-value", i)
-            square.addEventListener("click", Gameboard.displayCurrentMarker, { once: true });
+            square.addEventListener("click", displayCurrentMarker, { once: true });
             field.appendChild(square);
         }
     }
@@ -23,12 +45,23 @@ const Gameboard = (() => {
         theArray[e.target.dataset.value] = currentPlayer.marker;
         Game.checkWin();
         Game.checkTie();
+        if (Game.hasWinner || Game.hasTie) {
+            NextRoundButton.display();
+        }
         if (!Game.hasWinner && !Game.hasTie) Game.setNewTurn(); // if noone won
+    }
+    const reset = () => {
+        const squares = Page.getAllSquares();
+        squares.forEach(square => {
+            square.classList.remove("O", "X");
+            square.addEventListener("click", displayCurrentMarker, { once: true });
+        });
     }
     return {
         create,
         display,
         displayCurrentMarker,
+        reset,
     }
 })();
 
@@ -47,15 +80,20 @@ const Page = (() => {
     const updateRoundDisplay = () => {
         document.getElementById("round-counter").textContent = `Round ${Game.round}`;
     }
+    const getAllSquares = () => {
+        return Array.from(document.querySelectorAll(".square"));
+    }
+    let squares = getAllSquares();
     return {
         updateScoreDisplay,
         updateRoundDisplay,
+        getAllSquares,
     }
 })();
 
 const Game = (() => {
-    const hasWinner = false;
-    const hasTie = false;
+    let hasWinner = false;
+    let hasTie = false;
     const legend = document.getElementById("legend");
     let _currentPlayer = "";
     const winningCombinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
@@ -85,7 +123,7 @@ const Game = (() => {
         }
     }
     const _setNewRound = () => {
-        round++;
+        Game.round++;
     }
     const _updateScore = () => {
         winningPlayer.score++;
@@ -102,7 +140,6 @@ const Game = (() => {
                 _updateScore();
                 makeSquaresStopListening();
             }
-
         });
     }
     const _valuesAreDefined = (array) => {
@@ -116,8 +153,8 @@ const Game = (() => {
         && typeof array[7] != "undefined"
         && typeof array[8] != "undefined";
     }
-    const _isTie = () => {
-        return _valuesAreDefined(theArray) && Game.hasWinner == false ? Game.hasTie = true : Game.hasTie;
+    let _isTie = () => {
+        return _valuesAreDefined(theArray) && !Game.hasWinner;
     }
     const _announceTie = () => {
         legend.textContent = "It's a tie!";
@@ -129,19 +166,22 @@ const Game = (() => {
         }
     }
     const makeSquaresStopListening = () => {
-        const remainingSquares = Array.from(document.querySelectorAll(".square"));
-        remainingSquares.forEach(square => {
+        const squares = Page.getAllSquares();
+        squares.forEach(square => {
             square.removeEventListener("click", Gameboard.displayCurrentMarker, { once: true });
         });
     }
     const reset = () => {
-        const squares = Array.from(document.querySelectorAll(".square"));
-        squares.forEach(square => {
-            square.classList.remove("O", "X");
-            square.addEventListener("click", Gameboard.displayCurrentMarker, { once: true });
+        Game.hasWinner = false;
+        Game.hasTie = false;
         theArray = Gameboard.create(3);
-        });
+    }
+    function startNewRound() {
+        _setNewRound();
         Page.updateRoundDisplay();
+        Gameboard.reset();
+        Game.reset();
+        legend.textContent = `It's ${_currentPlayer.name}'s turn!`;
     }
     return {
         start,
@@ -150,6 +190,7 @@ const Game = (() => {
         checkWin,
         checkTie,
         reset,
+        startNewRound,
         round,
         hasWinner,
         hasTie,
