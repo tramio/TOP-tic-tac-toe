@@ -22,7 +22,8 @@ const Gameboard = (() => {
         e.target.classList.add(currentPlayer.marker);
         theArray[e.target.dataset.value] = currentPlayer.marker;
         Game.checkWin();
-        if (!Game.hasWinner) Game.setNewTurn(); // if noone won
+        Game.checkTie();
+        if (!Game.hasWinner && !Game.hasTie) Game.setNewTurn(); // if noone won
     }
     return {
         create,
@@ -54,6 +55,7 @@ const Page = (() => {
 
 const Game = (() => {
     const hasWinner = false;
+    const hasTie = false;
     const legend = document.getElementById("legend");
     let _currentPlayer = "";
     const winningCombinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
@@ -98,10 +100,33 @@ const Game = (() => {
                     legend.textContent = `${winningPlayer.name} won!`;
                 })();
                 _updateScore();
-                _setNewRound();
                 makeSquaresStopListening();
             }
+
         });
+    }
+    const _valuesAreDefined = (array) => {
+        return typeof array[0] != "undefined"
+        && typeof array[1] != "undefined"
+        && typeof array[2] != "undefined"
+        && typeof array[3] != "undefined"
+        && typeof array[4] != "undefined"
+        && typeof array[5] != "undefined"
+        && typeof array[6] != "undefined"
+        && typeof array[7] != "undefined"
+        && typeof array[8] != "undefined";
+    }
+    const _isTie = () => {
+        return _valuesAreDefined(theArray) && Game.hasWinner == false ? Game.hasTie = true : Game.hasTie;
+    }
+    const _announceTie = () => {
+        legend.textContent = "It's a tie!";
+    }
+    const checkTie = () => {
+        if (_isTie()) {
+            Game.hasTie = true;
+            _announceTie();
+        }
     }
     const makeSquaresStopListening = () => {
         const remainingSquares = Array.from(document.querySelectorAll(".square"));
@@ -123,10 +148,11 @@ const Game = (() => {
         getCurrentTurn,
         setNewTurn,
         checkWin,
+        checkTie,
         reset,
         round,
-        winningCombinations,
         hasWinner,
+        hasTie,
     };
 })();
 Game.start();
