@@ -44,11 +44,15 @@ const Gameboard = (() => {
         e.target.classList.add(currentPlayer.marker);
         theArray[e.target.dataset.value] = currentPlayer.marker;
         Game.checkWin();
-        Game.checkTie();
-        if (Game.hasWinner || Game.hasTie) {
+        Game.checkRoundTie();
+        if (Game.round < 3 && (Game.hasRoundWinner || Game.hasRoundTie)) {
             NextRoundButton.display();
         }
-        if (!Game.hasWinner && !Game.hasTie) Game.setNewTurn(); // if noone won
+        if (!Game.hasRoundWinner && !Game.hasRoundTie) Game.setNewTurn();
+        if (Game.isOver()) {
+            Game.setGameWinner();
+            Page.updateWinnerDisplay();
+        }
     }
     const reset = () => {
         const squares = Page.getAllSquares();
@@ -78,7 +82,21 @@ const Page = (() => {
         document.getElementById("player2-score").textContent = `${player2.name}: ${player2.score}`;
     }
     const updateRoundDisplay = () => {
-        document.getElementById("round-counter").textContent = `Round ${Game.round}`;
+        if (!Game.isLastRound()) {
+            document.getElementById("round-counter").textContent = `Round ${Game.round}`;
+        }
+        else {
+            document.getElementById("round-counter").textContent = `Round ${Game.round} (ultimate!)`;
+        }
+    }
+    const updateWinnerDisplay = () => {
+        typeof Game.gameWinner != "undefined" ? _displayGameWinner() : _displayGameTie();
+    }
+    const _displayGameWinner = () => {
+        legend.textContent = `${Game.gameWinner.name} won this game ${Game.gameWinner.score} to ${Game.gameLoser.score}!`
+    }
+    const _displayGameTie = () => {
+        legend.textContent = `No winner? Alright, ice cream for everyone!`
     }
     const getAllSquares = () => {
         return Array.from(document.querySelectorAll(".square"));
@@ -87,17 +105,26 @@ const Page = (() => {
     return {
         updateScoreDisplay,
         updateRoundDisplay,
+        updateWinnerDisplay,
         getAllSquares,
     }
 })();
 
 const Game = (() => {
-    let hasWinner = false;
-    let hasTie = false;
+    let hasRoundWinner = false;
+    let hasRoundTie = false;
+    let gameWinner;
+    let gameLoser;
     const legend = document.getElementById("legend");
     let _currentPlayer = "";
     const winningCombinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
     let round = 1;
+    let isLastRound = () => {
+        return Game.round == 3;
+    }
+    let isOver = () => {
+        return Game.round == 3 && (Game.hasRoundTie || Game.hasRoundWinner);
+    }
     const start = () => {
         theArray = Gameboard.create(3);
         Gameboard.display();
@@ -115,7 +142,7 @@ const Game = (() => {
     const _isWin = ([a, b, c]) => {
         return (theArray[a] == player1.marker || theArray[a] == player2.marker) && theArray[a] == theArray[b] && theArray[a] == theArray[c];
     }
-    const _getWinner = ([a, b, c]) => {
+    const _getRoundWinner = ([a, b, c]) => {
         if (theArray[a] == player1.marker) {
             return player1;
         } else {
@@ -132,9 +159,9 @@ const Game = (() => {
     const checkWin = () => {
         winningCombinations.forEach(combination => {
             if (_isWin(combination)) {
-                Game.hasWinner = true;
-                (function displayWinner() {
-                    winningPlayer = _getWinner(combination);
+                Game.hasRoundWinner = true;
+                (function displayRoundWinner() {
+                    winningPlayer = _getRoundWinner(combination);
                     legend.textContent = `${winningPlayer.name} won!`;
                 })();
                 _updateScore();
@@ -153,16 +180,16 @@ const Game = (() => {
         && typeof array[7] != "undefined"
         && typeof array[8] != "undefined";
     }
-    let _isTie = () => {
-        return _valuesAreDefined(theArray) && !Game.hasWinner;
+    let _isRoundTie = () => {
+        return _valuesAreDefined(theArray) && !Game.hasRoundWinner;
     }
-    const _announceTie = () => {
+    const _announceRoundTie = () => {
         legend.textContent = "It's a tie!";
     }
-    const checkTie = () => {
-        if (_isTie()) {
-            Game.hasTie = true;
-            _announceTie();
+    const checkRoundTie = () => {
+        if (_isRoundTie()) {
+            Game.hasRoundTie = true;
+            _announceRoundTie();
         }
     }
     const makeSquaresStopListening = () => {
@@ -172,8 +199,8 @@ const Game = (() => {
         });
     }
     const reset = () => {
-        Game.hasWinner = false;
-        Game.hasTie = false;
+        Game.hasRoundWinner = false;
+        Game.hasRoundTie = false;
         theArray = Gameboard.create(3);
     }
     function startNewRound() {
@@ -183,17 +210,32 @@ const Game = (() => {
         Game.reset();
         legend.textContent = `It's ${_currentPlayer.name}'s turn!`;
     }
+    const setGameWinner = () => {
+        if (player1.score > player2.score) {
+            Game.gameWinner = player1;
+            Game.gameLoser = player2;
+        }
+        if (player1.score < player2.score) {
+            Game.gameWinner = player2;
+            Game.gameLoser = player1;
+        }
+    }
     return {
         start,
         getCurrentTurn,
         setNewTurn,
         checkWin,
-        checkTie,
+        checkRoundTie,
         reset,
         startNewRound,
+        setGameWinner,
+        isOver,
+        isLastRound,
+        gameWinner,
+        gameLoser,
         round,
-        hasWinner,
-        hasTie,
+        hasRoundWinner,
+        hasRoundTie,
     };
 })();
 Game.start();
