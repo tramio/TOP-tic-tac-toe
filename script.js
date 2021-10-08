@@ -35,7 +35,8 @@ const NewGameButton = (() => {
         button.addEventListener("click", () => {
             Game.setNewPlayerNames();
             Game.start();
-            NewGameButton.hide();
+            Page.hide("new-game-btn");
+            Page.hide("player-information");
         });
     }
     return {
@@ -126,6 +127,9 @@ const player1 = createPlayer("Hearthian", "X");
 const player2 = createPlayer("Anglerfish", "O");
 
 const Page = (() => {
+    const hide = (elementId) => {
+        document.getElementById(elementId).style.display = "none";
+    }
     const getValueOf = (elementId) => {
         return elementValue = document.getElementById(elementId).value;
     }
@@ -160,6 +164,7 @@ const Page = (() => {
         updateRoundDisplay,
         updateWinnerDisplay,
         getAllSquares,
+        hide,
     }
 })();
 
