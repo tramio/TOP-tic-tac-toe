@@ -10,19 +10,22 @@
 
 /* Meta */
 body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     background: rgb(0,0,0);
     background: linear-gradient(167deg, var(--gradient-1) 0%, var(--gradient-2) 48%, var(--gradient-3) 77%, var(--gradient-4) 98%);
     background-size: cover;
     background-repeat: no-repeat;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     font-family: 'Urbanist', sans-serif;
     font-weight: 200;
     font-size: 20px !important;
     width: 100vw;
-    height: 100vh;
+    height: 95vh;
     color: white;
 }
 
@@ -106,7 +109,8 @@ button:hover {
 }
 
 /* Input */
-input {
+input,
+footer {
     font-family: 'Urbanist', sans-serif;
 }
 
@@ -118,4 +122,35 @@ input {
 }
 .form * {
     margin: 10px 10px 20px;
+}
+
+/* Footer */
+footer {
+    display: absolute;
+    height: 5vh;
+    text-align: center;
+    font-family: 'Urbanist', sans-serif;
+    color: white;
+}
+
+a:hover {
+    background-position: bottom 1px left 0;
+    background-size: 100% 2px;
+    color: rgb(255, 189, 119);
+}
+
+a:active {
+    color: rgb(255, 189, 119);
+}
+
+a {
+    background: rgb(187,84,26);
+    background: linear-gradient(167deg, rgba(187,84,26,1) 0%, rgba(245,144,38,1) 57%, rgba(255,255,255,0.9) 98%);
+    background-repeat: no-repeat;
+    background-size: 0% 0px;
+    padding-bottom: 3px;
+    transition: background-size .2s, background-position .15s, color .5s;
+    font-weight: 700 !important;
+    text-decoration: none;
+    color: rgb(245,144,38);
 }
