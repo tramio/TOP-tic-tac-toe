@@ -12,7 +12,7 @@
 body {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     background: rgb(0,0,0);
     background: linear-gradient(167deg, var(--gradient-1) 0%, var(--gradient-2) 48%, var(--gradient-3) 77%, var(--gradient-4) 98%);
@@ -20,13 +20,14 @@ body {
     background-repeat: no-repeat;
     font-family: 'Urbanist', sans-serif;
     font-weight: 200;
-    font-size: 20px;
+    font-size: 20px !important;
     width: 100vw;
     height: 100vh;
     color: white;
 }
 
 h1 {
+    margin: 20px 0;
     font-size: 40px;
 }
 
@@ -34,13 +35,30 @@ h2 {
     font-size: 32px;
 }
 
+.text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scores {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin: 20px 0;
+}
+
 /* Gameboard */
-#field {
+.text,
+.field {
+    width: 400px;
+}
+
+.field {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     grid-gap: 10px;
-    width: 400px;
     height: 400px;
 }
 
@@ -48,6 +66,10 @@ h2 {
     width: auto;
     height: auto;
     background: black;
+}
+
+.square:hover {
+    cursor: pointer;
 }
 
 .O,
@@ -63,6 +85,22 @@ h2 {
     background-image: url("hearthian.png");
 }
 
-#next-round-btn {
-    display: none;
+/* Buttons */
+button {
+    margin: 0 20px 20px;
+    padding: 5px 25px;
+    font-family: 'Urbanist', sans-serif;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(104, 164, 179, 0.3);
+    color: white;
+    box-shadow: 5px 5px rgba(255, 255, 255, 0.1);
+    transition: all 0.8s;
+}
+
+button:hover {
+    background-color: rgb(104, 164, 179, 0.7);
+    cursor: pointer;
+    box-shadow: 10px 10px rgba(255, 255, 255, 0.1);
 }

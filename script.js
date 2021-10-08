@@ -20,7 +20,31 @@ const NextRoundButton = (() => {
         enable,
     }
 })();
+NextRoundButton.hide();
 NextRoundButton.enable();
+
+const NewGameButton = (() => {
+    const button = document.getElementById("new-game-btn");
+    const display = () => {
+        button.style.display = "inline-block";
+    }
+    const hide = () => {
+        button.style.display = "none";
+    }
+    const enable = () => {
+        button.addEventListener("click", () => {
+            Game.start();
+            NewGameButton.hide();
+        });
+    }
+    return {
+        display,
+        hide,
+        enable,
+    }
+})();
+NewGameButton.display();
+NewGameButton.enable();
 
 const Gameboard = (() => {
     const _setSize = (squaresPerSide) => {
@@ -238,4 +262,3 @@ const Game = (() => {
         hasRoundTie,
     };
 })();
-Game.start();
