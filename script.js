@@ -33,10 +33,16 @@ const NewGameButton = (() => {
     }
     const enable = () => {
         button.addEventListener("click", () => {
-            Game.setNewPlayerNames();
-            Game.start();
-            Page.hide("new-game-btn");
-            Page.hide("player-information");
+            if (Page.formIsFilled()) {
+                Game.setNewPlayerNames();
+                Game.start();
+                Page.hide("new-game-btn");
+                Page.hide("player-information");
+                Page.hide("form-alert");
+            }
+            else {
+                Page.displayInlineBlock("form-alert");
+            }
         });
     }
     return {
@@ -130,6 +136,9 @@ const Page = (() => {
     const hide = (elementId) => {
         document.getElementById(elementId).style.display = "none";
     }
+    const displayInlineBlock = (elementId) => {
+        document.getElementById(elementId).style.display = "inline-block";
+    }
     const getValueOf = (elementId) => {
         return elementValue = document.getElementById(elementId).value;
     }
@@ -158,6 +167,9 @@ const Page = (() => {
         return Array.from(document.querySelectorAll(".square"));
     }
     let squares = getAllSquares();
+    const formIsFilled = () => {
+        return Page.getValueOf("player1-name") != "" && Page.getValueOf("player2-name") != "";
+    }
     return {
         getValueOf,
         updateScoreDisplay,
@@ -165,8 +177,11 @@ const Page = (() => {
         updateWinnerDisplay,
         getAllSquares,
         hide,
+        displayInlineBlock,
+        formIsFilled,
     }
 })();
+Page.hide("form-alert");
 
 const Game = (() => {
     let hasRoundWinner = false;
