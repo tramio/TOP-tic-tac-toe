@@ -33,6 +33,7 @@ const NewGameButton = (() => {
     }
     const enable = () => {
         button.addEventListener("click", () => {
+            Game.setNewPlayerNames();
             Game.start();
             NewGameButton.hide();
         });
@@ -125,6 +126,9 @@ const player1 = createPlayer("Hearthian", "X");
 const player2 = createPlayer("Anglerfish", "O");
 
 const Page = (() => {
+    const getValueOf = (elementId) => {
+        return elementValue = document.getElementById(elementId).value;
+    }
     const updateScoreDisplay = () => {
         document.getElementById("player1-score").textContent = `${player1.name}: ${player1.score}`;
         document.getElementById("player2-score").textContent = `${player2.name}: ${player2.score}`;
@@ -151,6 +155,7 @@ const Page = (() => {
     }
     let squares = getAllSquares();
     return {
+        getValueOf,
         updateScoreDisplay,
         updateRoundDisplay,
         updateWinnerDisplay,
@@ -281,6 +286,10 @@ const Game = (() => {
         Game.reset();
         legend.textContent = `It's ${_currentPlayer.name}'s turn!`;
     }
+    const setNewPlayerNames = () => {
+        player1.name = Page.getValueOf("player1-name");
+        player2.name = Page.getValueOf("player2-name");
+    }
     return {
         start,
         getCurrentTurn,
@@ -293,6 +302,7 @@ const Game = (() => {
         isOver,
         isLastRound,
         resetFully,
+        setNewPlayerNames,
         gameWinner,
         gameLoser,
         round,

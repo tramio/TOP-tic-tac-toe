@@ -22,7 +22,13 @@
             <p id="player1-score"></p>
             <p id="player2-score"></p>
         </div>
-        <button id="new-game-btn" class="button">Start a new game!</button>
+        <form id="player-information" class="form" action="">
+            <label for="player1-name">Player 1 name</label><br>
+            <input id="player1-name" type="text" placeholder="ex: Hearthian" required><br>
+            <label for="player2-name">Player 2 name</label><br>
+            <input id="player2-name" type="text" placeholder="ex: Anglerfish" required><br>
+        </form>
+        <button id="new-game-btn" class="button" type="submit">Start a new game!</button>
         <button id="next-round-btn" class="button">Move on to the next round!</button>
         <button id="play-again-btn" class="button">Let's play again!</button>
     </div>

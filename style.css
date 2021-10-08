@@ -104,3 +104,18 @@ button:hover {
     cursor: pointer;
     box-shadow: 10px 10px rgba(255, 255, 255, 0.1);
 }
+
+/* Input */
+input {
+    font-family: 'Urbanist', sans-serif;
+}
+
+.form {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+}
+.form * {
+    margin: 10px 10px 20px;
+}
