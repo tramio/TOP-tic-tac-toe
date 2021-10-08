@@ -46,6 +46,29 @@ const NewGameButton = (() => {
 NewGameButton.display();
 NewGameButton.enable();
 
+const playAgainButton = (() => {
+    const button = document.getElementById("play-again-btn");
+    const display = () => {
+        button.style.display = "inline-block";
+    }
+    const hide = () => {
+        button.style.display = "none";
+    }
+    const enable = () => {
+        button.addEventListener("click", () => {
+            Game.resetFully();
+            playAgainButton.hide();
+        });
+    }
+    return {
+        display,
+        hide,
+        enable,
+    }
+})();
+playAgainButton.hide();
+playAgainButton.enable();
+
 const Gameboard = (() => {
     const _setSize = (squaresPerSide) => {
         return board = new Array(Math.pow(squaresPerSide, 2));
@@ -76,6 +99,7 @@ const Gameboard = (() => {
         if (Game.isOver()) {
             Game.setGameWinner();
             Page.updateWinnerDisplay();
+            playAgainButton.display();
         }
     }
     const reset = () => {
@@ -186,7 +210,7 @@ const Game = (() => {
                 Game.hasRoundWinner = true;
                 (function displayRoundWinner() {
                     winningPlayer = _getRoundWinner(combination);
-                    legend.textContent = `${winningPlayer.name} won!`;
+                    legend.textContent = `${winningPlayer.name} won this round!`;
                 })();
                 _updateScore();
                 makeSquaresStopListening();
@@ -244,6 +268,19 @@ const Game = (() => {
             Game.gameLoser = player1;
         }
     }
+    const resetScores = () => {
+        player1.score = 0;
+        player2.score = 0;
+    }
+    const resetFully = () => {
+        Game.round = 1;
+        Page.updateRoundDisplay();
+        resetScores();
+        Page.updateScoreDisplay();
+        Gameboard.reset();
+        Game.reset();
+        legend.textContent = `It's ${_currentPlayer.name}'s turn!`;
+    }
     return {
         start,
         getCurrentTurn,
@@ -255,6 +292,7 @@ const Game = (() => {
         setGameWinner,
         isOver,
         isLastRound,
+        resetFully,
         gameWinner,
         gameLoser,
         round,
